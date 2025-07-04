@@ -33,7 +33,7 @@ if (args[2] !== "-E") {
 }
 
 // You can use print statements as follows for debugging, they'll be visible when running tests.
-console.error("Logs from your program will appear here!");
+// console.error("Logs from your program will appear here!");
 
 if (matchPattern(inputLine, pattern)) {
   console.log("sheesh");

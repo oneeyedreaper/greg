@@ -22,6 +22,8 @@ function matchPattern(inputLine: string, pattern: string): boolean {
     });
   } else if (pattern === "\\d") {
     return Array.from(inputLine).some((c) => "0123456789".includes(c));
+  } else if (pattern.startsWith("[") && pattern.endsWith("]")) {
+    return Array.from(inputLine).some((c) => pattern.slice(1, -1).includes(c));
   } else {
     throw new Error(`Unhandled pattern: ${pattern}`);
   }

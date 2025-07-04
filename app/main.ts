@@ -20,8 +20,7 @@ function matchPattern(inputLine: string, pattern: string): boolean {
         return false;
       else return true;
     });
-  }
-  if (pattern === "\\d") {
+  } else if (pattern === "\\d") {
     return Array.from(inputLine).some((c) => "0123456789".includes(c));
   } else {
     throw new Error(`Unhandled pattern: ${pattern}`);

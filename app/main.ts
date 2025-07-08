@@ -8,12 +8,10 @@ function matchPattern(inputLine: string, pattern: string): boolean {
     !pattern.includes("\\") &&
     !pattern.includes("[") &&
     !pattern.includes("^") &&
+    !pattern.includes("$") &&
     !pattern.includes("]")
   ) {
     return inputLine.includes(pattern);
-  }
-  if (pattern.startsWith("^")) {
-    return inputLine.startsWith(pattern.slice(1));
   }
 
   const tokens = pattern.split(" ");
@@ -34,7 +32,14 @@ function matchPattern(inputLine: string, pattern: string): boolean {
     //     return false;
     //   }
     // }
-    if ((token.includes("\\d") || token.includes("\\w")) && token.length > 2) {
+    if (token.startsWith("^")) {
+      return inputLine.startsWith(token.slice(1));
+    } else if (token.endsWith("$")) {
+      return inputLine.endsWith(token.slice(0, -1));
+    } else if (
+      (token.includes("\\d") || token.includes("\\w")) &&
+      token.length > 2
+    ) {
       console.log(inputToken, token);
       if (!matchSequence(inputToken, token)) {
         return false;

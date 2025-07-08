@@ -109,4 +109,15 @@ run_test "slog" "^log" no "Does not match when 'log' is not at the start"
 run_test "log file" "^log" yes "Matches when input starts with 'log'"
 run_test "the log file" "^log" no "Does not match when 'log' is not at the start"
 
+# -------------------------------
+# Stage 7: End of Line anchors ($)
+# -------------------------------
+
+run_test "dog" "dog$" yes "Matches 'dog' at end of string"
+run_test "dogs" "dog$" no "Should not match when 'dog' is followed by more characters"
+run_test "my dog" "dog$" yes "Matches when 'dog' is the last word"
+run_test "dog pound" "dog$" no "Should not match when 'dog' is not at the end"
+run_test "bulldog" "dog$" yes "Matches if string ends with 'dog'"
+run_test "bulldogs" "dog$" no "Fails if extra character after 'dog'"
+
 echo "✅ All tests completed."

@@ -7,10 +7,15 @@ function matchPattern(inputLine: string, pattern: string): boolean {
   if (
     !pattern.includes("\\") &&
     !pattern.includes("[") &&
+    !pattern.includes("^") &&
     !pattern.includes("]")
   ) {
     return inputLine.includes(pattern);
   }
+  if (pattern.startsWith("^")) {
+    return inputLine.startsWith(pattern.slice(1));
+  }
+
   const tokens = pattern.split(" ");
   const inputTokens = inputLine.split(" ");
 

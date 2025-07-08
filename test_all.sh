@@ -100,4 +100,13 @@ run_test "5 hats" "\\d \\w\\w\\ws" yes "Valid match with 'hats'"
 run_test "apple" "\\d apple" no "Missing digit — should not match"
 run_test "" "\\d \\w\\w\\ws" no "Empty string — should not match"
 
+# -------------------------------
+# Stage 7: Start of line anchors (^)
+# -------------------------------
+
+run_test "log" "^log" yes "Matches 'log' at start of string"
+run_test "slog" "^log" no "Does not match when 'log' is not at the start"
+run_test "log file" "^log" yes "Matches when input starts with 'log'"
+run_test "the log file" "^log" no "Does not match when 'log' is not at the start"
+
 echo "✅ All tests completed."

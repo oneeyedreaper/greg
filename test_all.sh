@@ -120,4 +120,46 @@ run_test "dog pound" "dog$" no "Should not match when 'dog' is not at the end"
 run_test "bulldog" "dog$" yes "Matches if string ends with 'dog'"
 run_test "bulldogs" "dog$" no "Fails if extra character after 'dog'"
 
+# -------------------------------
+# Stage 8: One or more repetitions (+)
+# -------------------------------
+
+# === Literal character repetition ===
+run_test "a" "a+" yes "Single 'a' matches a+"
+run_test "aa" "a+" yes "Multiple 'a's match a+"
+run_test "dog" "a+" no "No 'a' in 'dog' — should not match"
+run_test "" "a+" no "Empty string should not match"
+
+# === Embedded usage in literal patterns ===
+run_test "cats" "ca+ts" yes "'cats' matches ca+ts"
+run_test "caats" "ca+ts" yes "'caats' matches ca+ts"
+run_test "caaaats" "ca+ts" yes "'caaaats' matches ca+ts"
+run_test "cts" "ca+ts" no "Missing 'a's — should not match"
+run_test "cbts" "ca+ts" no "Wrong letter in place of 'a' — should not match"
+
+# === Using multiple + quantifiers ===
+run_test "zzz" "z+z" yes "'zzz' matches z+z"
+run_test "zz" "z+z" yes "'zz' matches z+z"
+run_test "z" "z+z" no "'z' does not satisfy z+z"
+
+# === \d+ and \w+ (character classes + +)
+run_test "123" "\d+" yes "Digit sequence matches \\d+"
+run_test "9" "\d+" yes "Single digit matches \\d+"
+run_test "abc" "\d+" no "Letters do not match \\d+"
+run_test "" "\d+" no "Empty input should not match \\d+"
+
+run_test "hello" "\w+" yes "Word characters match \\w+"
+run_test "he110" "\w+" yes "Alphanumeric match for \\w+"
+run_test "_" "\w+" yes "Underscore is \\w — should match"
+run_test "--" "\w+" no "Symbols are not \\w — should not match"
+run_test "" "\w+" no "Empty input should not match \\w+"
+
+# === Edge cases ===
+run_test "aaaa" "a+a+" yes "'aaaa' matches a+a+ (greedy overlap okay)"
+run_test "aa" "a+a+" yes "'aa' matches a+a+"
+run_test "a" "a+a+" no "'a' not enough to satisfy both a+"
+run_test "apple" "a+p+" yes "Multiple a’s and at least one p — should match"
+run_test "appple" "a+p+" yes "More than one 'p' — still match"
+run_test "ale" "a+p+" no "Missing required p — should not match"
+
 echo "✅ All tests completed."

@@ -110,7 +110,7 @@ run_test "log file" "^log" yes "Matches when input starts with 'log'"
 run_test "the log file" "^log" no "Does not match when 'log' is not at the start"
 
 # -------------------------------
-# Stage 7: End of Line anchors ($)
+# Stage 8: End of Line anchors ($)
 # -------------------------------
 
 run_test "dog" "dog$" yes "Matches 'dog' at end of string"
@@ -121,7 +121,7 @@ run_test "bulldog" "dog$" yes "Matches if string ends with 'dog'"
 run_test "bulldogs" "dog$" no "Fails if extra character after 'dog'"
 
 # -------------------------------
-# Stage 8: One or more repetitions (+)
+# Stage 9: One or more repetitions (+)
 # -------------------------------
 
 # === Literal character repetition ===
@@ -161,5 +161,37 @@ run_test "a" "a+a+" no "'a' not enough to satisfy both a+"
 run_test "apple" "a+p+" yes "Multiple a’s and at least one p — should match"
 run_test "appple" "a+p+" yes "More than one 'p' — still match"
 run_test "ale" "a+p+" no "Missing required p — should not match"
+
+# -------------------------------
+# Stage 9: One or more repetitions (+)
+# -------------------------------
+
+# === Literal optional match ===
+run_test "dogs" "dogs?" yes "'dogs' matches dogs?"
+run_test "dog" "dogs?" yes "'dog' matches dogs?"
+run_test "dogss" "dogs?" no "'dogss' should not match dogs?"
+run_test "cats" "dogs?" no "'cats' should not match dogs?"
+
+# === Single character optional ===
+run_test "" "a?" yes "Empty input matches a?"
+run_test "a" "a?" yes "Single 'a' matches a?"
+run_test "aa" "a?" no "Double 'a' should not match a?"
+
+# === Class + ? ===
+run_test "7" "\d?" yes "Single digit matches \\d?"
+run_test "" "\d?" yes "Empty input matches optional digit"
+run_test "99" "\d?" no "Multiple digits should not match \\d?"
+
+run_test "x" "\w?" yes "Single word character matches \\w?"
+run_test "" "\w?" yes "Empty input matches \\w?"
+run_test "--" "\w?" no "Symbols should not match \\w?"
+
+# === Optional in longer pattern ===
+run_test "logs" "log?s" yes "'logs' matches log?s"
+run_test "los" "log?s" no "Missing 'g' — should not match"
+run_test "log" "log?s" no "Missing 's' at end — should not match"
+run_test "logs" "log?s?" yes "Both optional — should match 'logs'"
+run_test "log" "log?s?" yes "Missing s — still matches"
+run_test "lo" "log?s?" no "Missing g — doesn't match"
 
 echo "✅ All tests completed."

@@ -12,7 +12,7 @@ export type Token =
 
 export type LiteralToken = {
   type: "literal";
-  Value: string;
+  value: string;
 };
 export type EscapeToken = {
   type: "escape";

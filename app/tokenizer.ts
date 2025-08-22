@@ -27,43 +27,49 @@ export function tokenize(pattern: string): Token[] {
     } else if (["+", "*", "?"].includes(char)) {
       tokens.push({ type: "quantifier", value: char as "*" | "+" | "?" });
       i += 1;
-    } else if (char == "{") {
+    } else if (char === "{") {
       let j = i + 1;
       let min = "";
+
+      // collect min digits
       while (j < pattern.length && pattern[j] >= "0" && pattern[j] <= "9") {
         min += pattern[j];
         j++;
       }
+
       if (min.length > 0) {
-        let max: null | string = null;
-        if (pattern[j] == ",") {
+        let max: string | null = null;
+
+        // optional comma + max
+        if (pattern[j] === ",") {
           j++;
           let temp = "";
-          while (
-            j + 1 > pattern.length &&
-            pattern[j] >= "0" &&
-            pattern[j] <= "9"
-          ) {
+          while (j < pattern.length && pattern[j] >= "0" && pattern[j] <= "9") {
             temp += pattern[j];
             j++;
           }
           if (temp.length > 0) {
             max = temp;
+          } else {
+            max = ""; // means open upper bound, e.g. {3,}
           }
         }
-        if (pattern[j] == "}") {
+
+        // expect }
+        if (pattern[j] === "}") {
           j++;
+          // ⚠️ don't increment j here!
           const val = max === null ? `{${min}}` : `{${min},${max}}`;
 
           tokens.push({ type: "rangeQuantifier", value: val });
 
-          i = j;
+          i = j; // skip over closing brace
           continue;
         }
       }
 
+      // fallback → literal {
       tokens.push({ type: "literal", value: "{" });
-      i++;
     } else if (char == "|") {
       tokens.push({ type: "alternation", value: "|" });
       i += 1;
